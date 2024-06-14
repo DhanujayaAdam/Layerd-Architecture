@@ -11,8 +11,8 @@ import java.util.List;
 
 public class OrderDetailDAOImpl implements OrderDetailDAO {
     @Override
-    public boolean saveDetail(Connection connection,String orderId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
-        connection = DBConnection.getDbConnection().getConnection();
+    public boolean saveDetail(String orderId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
         connection.setAutoCommit(false);
         PreparedStatement stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
         for (OrderDetailDTO detail : orderDetails) {

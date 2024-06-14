@@ -54,7 +54,7 @@ public class PlaceOrderFormController {
     CustomerDAO customerDAO = new CustomerDAOImpl();
     ItemDAO itemDAO = new ItemDAOImpl();
     OrderDAO orderDAO = new OrderDAOImpl();
-    Connection connection;
+//    Connection connection;
 
 
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -322,18 +322,18 @@ public class PlaceOrderFormController {
                 System.out.println("isFound?");
             }
             System.out.println(orderId+","+orderDate+","+customerId);
-            boolean saveOrder = orderDAO.saveOrder(connection,orderId, orderDate, customerId);
+            boolean saveOrder = orderDAO.saveOrder(orderId, orderDate, customerId);
             if (saveOrder) {
                 System.out.println("isSaved");
                 OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
-                boolean saveDetail = orderDetailDAO.saveDetail(connection,orderId, orderDetails);
+                boolean saveDetail = orderDetailDAO.saveDetail(orderId, orderDetails);
                 if (saveDetail) {
                     System.out.println("isSaveDetail");
                     for (OrderDetailDTO detail : orderDetails) {
 //                //Search & Update Item
                         ItemDTO item = findItem(detail.getItemCode());
                         item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
-                        boolean update = itemDAO.updateItemAfterPlaceOrder(connection, item);
+                        boolean update = itemDAO.updateItemAfterPlaceOrder(item);
                         if (update){
                             return true;
                         }

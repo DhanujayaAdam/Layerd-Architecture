@@ -76,8 +76,8 @@ public class ItemDAOImpl implements ItemDAO {
     return item;
     }
     @Override
-    public boolean updateItemAfterPlaceOrder(Connection connection,ItemDTO item) throws SQLException, ClassNotFoundException {
-        connection = DBConnection.getDbConnection().getConnection();
+    public boolean updateItemAfterPlaceOrder(ItemDTO item) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
         connection.setAutoCommit(false);
         PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
         pstm.setString(1, item.getDescription());

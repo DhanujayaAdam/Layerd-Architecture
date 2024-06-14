@@ -33,8 +33,8 @@ public class OrderDAOImpl implements OrderDAO {
         return pstm.executeQuery().next();
     }
     @Override
-    public boolean saveOrder(Connection connection,String orderId, LocalDate orderDate, String customerId) throws SQLException, ClassNotFoundException {
-        connection = DBConnection.getDbConnection().getConnection();
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
         connection.setAutoCommit(false);
         PreparedStatement stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
         stm.setString(1, orderId);

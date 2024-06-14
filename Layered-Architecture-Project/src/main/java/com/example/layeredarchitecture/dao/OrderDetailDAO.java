@@ -8,5 +8,5 @@ import java.util.Collection;
 import java.util.List;
 
 public interface OrderDetailDAO {
-    public boolean saveDetail(Connection connection,String orderId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException;
+    public boolean saveDetail(String orderId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException;
 }
