@@ -54,7 +54,7 @@ public class PlaceOrderFormController {
     CustomerDAO customerDAO = new CustomerDAOImpl();
     ItemDAO itemDAO = new ItemDAOImpl();
     OrderDAO orderDAO = new OrderDAOImpl();
-//    Connection connection;
+    OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
 
 
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -325,7 +325,6 @@ public class PlaceOrderFormController {
             boolean saveOrder = orderDAO.saveOrder(orderId, orderDate, customerId);
             if (saveOrder) {
                 System.out.println("isSaved");
-                OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
                 boolean saveDetail = orderDetailDAO.saveDetail(orderId, orderDetails);
                 if (saveDetail) {
                     System.out.println("isSaveDetail");
