@@ -186,7 +186,6 @@ public class PlaceOrderFormController {
 
     public String generateNewOrderId() {
         try {
-            OrderDAOImpl orderDAO = new OrderDAOImpl();
             return orderDAO.generateId();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
@@ -199,7 +198,6 @@ public class PlaceOrderFormController {
     private void loadAllCustomerIds() {
         try {
             ArrayList<CustomerDTO> customerDTOS = customerDAO.getAllCustomer();
-
             for (CustomerDTO customer : customerDTOS) {
                 cmbCustomerId.getItems().add(customer.getId());
             }
