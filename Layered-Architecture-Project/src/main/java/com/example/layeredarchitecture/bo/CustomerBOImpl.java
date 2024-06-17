@@ -15,7 +15,7 @@ public class CustomerBOImpl {
     public void updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
        customerDAO.update(customerDTO);
     }
-    public boolean exist(String id) throws SQLException, ClassNotFoundException {
+    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
        return customerDAO.exist(id);
     }
     public void deleteCustomer(String id) throws SQLException, ClassNotFoundException {

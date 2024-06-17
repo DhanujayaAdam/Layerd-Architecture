@@ -13,12 +13,10 @@ public class OrderDAOImpl implements OrderDAO {
         ResultSet rst = SQLUtil.execute("SELECT oid FROM `Orders` ORDER BY oid DESC LIMIT 1;");
         return rst.next() ? String.format("OID-%03d", (Integer.parseInt(rst.getString("oid").replace("OID-", "")) + 1)) : "OID-001";
     }
-
     @Override
     public OrderDTO find(String newValue) throws SQLException, ClassNotFoundException {
         return null;
     }
-
     @Override
     public void getOrderId(String orderId) throws SQLException, ClassNotFoundException {
         SQLUtil.execute("SELECT oid FROM `Orders` WHERE oid=?");
@@ -32,22 +30,18 @@ public class OrderDAOImpl implements OrderDAO {
     public void update(OrderDTO dto) throws SQLException, ClassNotFoundException {
 
     }
-
     @Override
     public boolean exist(String id) throws SQLException, ClassNotFoundException {
         return false;
     }
-
     @Override
     public void delete(String id) throws SQLException, ClassNotFoundException {
 
     }
-
     @Override
     public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
         return null;
     }
-
     @Override
     public boolean add(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
         return SQLUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)",orderDTO.getOrderId(),orderDTO.getOrderDate(),orderDTO.getCustomerId());
