@@ -46,7 +46,7 @@ public class OrderDetailDTO implements Serializable {
     @Override
     public String toString() {
         return "OrderDetailDTO{" +
-                "itemCode='" + itemCode + '\'' +
+                ", itemCode='" + itemCode + '\'' +
                 ", qty=" + qty +
                 ", unitPrice=" + unitPrice +
                 '}';

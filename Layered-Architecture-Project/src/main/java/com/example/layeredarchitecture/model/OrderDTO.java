@@ -1,6 +1,7 @@
 package com.example.layeredarchitecture.model;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 
 
@@ -12,7 +13,7 @@ public class OrderDTO  {
     private String customerName;
     private BigDecimal orderTotal;
 
-    public OrderDTO() {
+    public OrderDTO(String orderId, LocalDate orderDate, String customerId) {
     }
 
     public OrderDTO(String orderId, LocalDate orderDate, String customerId, String customerName, BigDecimal orderTotal) {

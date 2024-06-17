@@ -4,6 +4,7 @@ import com.example.layeredarchitecture.dao.*;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
+import com.example.layeredarchitecture.model.OrderDTO;
 import com.example.layeredarchitecture.model.OrderDetailDTO;
 import com.example.layeredarchitecture.view.tdm.CustomerTM;
 import com.example.layeredarchitecture.view.tdm.OrderDetailTM;
@@ -310,7 +311,10 @@ public class PlaceOrderFormController {
 
     public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
         /*Transaction*/
+        Connection connection = null;
         try {
+            connection = DBConnection.getDbConnection().getConnection();
+            connection.setAutoCommit(false);
             System.out.println("come to try catch");
             System.out.println(orderId);
             boolean idFound = orderDAO.findOrderId(orderId);
@@ -320,23 +324,35 @@ public class PlaceOrderFormController {
                 System.out.println("isFound?");
             }
             System.out.println(orderId+","+orderDate+","+customerId);
-            boolean saveOrder = orderDAO.saveOrder(orderId, orderDate, customerId);
-            if (saveOrder) {
-                System.out.println("isSaved");
-                boolean saveDetail = orderDetailDAO.saveDetail(orderId, orderDetails);
-                if (saveDetail) {
+            boolean saveOrder = orderDAO.saveOrder(orderId,orderDate,customerId);
+            if (!saveOrder) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+            for (OrderDetailDTO detail : orderDetails) {
+                boolean saveDetail = orderDetailDAO.saveDetail(orderId,detail);
+                if (!saveDetail) {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    return false;
+                }
                     System.out.println("isSaveDetail");
-                    for (OrderDetailDTO detail : orderDetails) {
+
 //                //Search & Update Item
                         ItemDTO item = findItem(detail.getItemCode());
                         item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
                         boolean update = itemDAO.updateItemAfterPlaceOrder(item);
-                        if (update){
-                            return true;
+                        if (!update){
+                            connection.rollback();
+                            connection.setAutoCommit(true);
+                            return false;
                         }
                     }
-                }
-            }
+                    connection.commit();
+                    connection.setAutoCommit(true);
+                    return true;
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
