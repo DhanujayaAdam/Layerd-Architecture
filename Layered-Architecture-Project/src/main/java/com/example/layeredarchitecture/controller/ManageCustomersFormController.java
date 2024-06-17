@@ -175,7 +175,7 @@ public class ManageCustomersFormController {
 
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerBO.exist(id);
+        return customerBO.existCustomer(id);
     }
 
 

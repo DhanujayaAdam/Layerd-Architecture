@@ -15,8 +15,8 @@ public class ItemDAOImpl implements ItemDAO {
             itemDTOS.add(new ItemDTO(
                     rst.getString(1),
                     rst.getString(2),
-                    rst.getBigDecimal(3),
-                    rst.getInt(4)
+                    rst.getInt(3),
+                    rst.getBigDecimal(4)
             ));
         }
         return itemDTOS;
@@ -50,7 +50,7 @@ public class ItemDAOImpl implements ItemDAO {
     public ItemDTO find(String newItemCode) throws SQLException, ClassNotFoundException {
         ResultSet rst =SQLUtil.execute("SELECT * FROM Item WHERE code=?",newItemCode + "");
         rst.next();
-        ItemDTO item = new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+        ItemDTO item = new ItemDTO(newItemCode + "", rst.getString("description"), rst.getInt("qtyOnHand"), rst.getBigDecimal("unitPrice"));
     return item;
     }
     @Override
