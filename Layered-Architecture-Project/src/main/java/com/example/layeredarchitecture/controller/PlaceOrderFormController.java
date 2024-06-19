@@ -1,17 +1,13 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.bo.CustomerBO;
+import com.example.layeredarchitecture.bo.ItemBO;
+import com.example.layeredarchitecture.bo.OrderBO;
+import com.example.layeredarchitecture.bo.OrderDetailBO;
 import com.example.layeredarchitecture.bo.CustomerBOImpl;
 import com.example.layeredarchitecture.bo.ItemBOImpl;
 import com.example.layeredarchitecture.bo.OrderBOImpl;
 import com.example.layeredarchitecture.bo.OrderDetailBOImpl;
-import com.example.layeredarchitecture.dao.custom.CustomerDAO;
-import com.example.layeredarchitecture.dao.custom.ItemDAO;
-import com.example.layeredarchitecture.dao.custom.OrderDAO;
-import com.example.layeredarchitecture.dao.custom.OrderDetailDAO;
-import com.example.layeredarchitecture.dao.custom.impl.CustomerDAOImpl;
-import com.example.layeredarchitecture.dao.custom.impl.ItemDAOImpl;
-import com.example.layeredarchitecture.dao.custom.impl.OrderDAOImpl;
-import com.example.layeredarchitecture.dao.custom.impl.OrderDetailDAOImpl;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
@@ -62,10 +58,10 @@ public class PlaceOrderFormController {
     public Label lblDate;
     public Label lblTotal;
     private String orderId;
-    CustomerBOImpl customerBO = new CustomerBOImpl();
-    ItemBOImpl itemBO = new ItemBOImpl();
-    OrderBOImpl orderBO = new OrderBOImpl();
-    OrderDetailBOImpl orderDetailBO = new OrderDetailBOImpl();
+    CustomerBO customerBO = new CustomerBOImpl();
+    ItemBO itemBO = new ItemBOImpl();
+    OrderBO orderBO = new OrderBOImpl();
+    OrderDetailBO orderDetailBO = new OrderDetailBOImpl();
 
 
     public void initialize() throws SQLException, ClassNotFoundException {

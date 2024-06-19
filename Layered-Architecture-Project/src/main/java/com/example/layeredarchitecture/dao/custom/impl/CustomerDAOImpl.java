@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public void update(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
-        SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?",customerDTO.getId(),customerDTO.getName(),customerDTO.getAddress());
+        SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?",customerDTO.getName(),customerDTO.getAddress(),customerDTO.getId());
     }
     @Override
     public boolean exist(String id) throws SQLException, ClassNotFoundException {
@@ -52,5 +52,4 @@ public class CustomerDAOImpl implements CustomerDAO {
         CustomerDTO customerDTO = new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
         return customerDTO;
     }
-
 }
