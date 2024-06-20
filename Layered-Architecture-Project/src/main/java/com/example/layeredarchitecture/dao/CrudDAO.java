@@ -5,7 +5,7 @@ import com.example.layeredarchitecture.model.CustomerDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public interface CrudDAO<T> { //to write common methods
+public interface CrudDAO<T> extends SuperDAO{ //to write common methods
     public void update(T dto) throws SQLException, ClassNotFoundException ;
     public boolean exist(String id) throws SQLException, ClassNotFoundException ;
     public void delete(String id) throws SQLException, ClassNotFoundException ;

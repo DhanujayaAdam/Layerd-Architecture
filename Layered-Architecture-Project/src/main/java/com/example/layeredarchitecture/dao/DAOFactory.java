@@ -1,9 +1,6 @@
 package com.example.layeredarchitecture.dao;
 
-import com.example.layeredarchitecture.dao.custom.impl.CustomerDAOImpl;
-import com.example.layeredarchitecture.dao.custom.impl.ItemDAOImpl;
-import com.example.layeredarchitecture.dao.custom.impl.OrderDAOImpl;
-import com.example.layeredarchitecture.dao.custom.impl.OrderDetailDAOImpl;
+import com.example.layeredarchitecture.dao.custom.impl.*;
 
 //Factory design pattern - to hide object creations
 public class DAOFactory {
@@ -15,9 +12,9 @@ public class DAOFactory {
         return (daoFactory == null) ? new DAOFactory() : daoFactory;
     }
     public enum DAOType{
-        CUSTOMER,ITEM,ORDER,ORDER_DETAIL
+        CUSTOMER,ITEM,ORDER,ORDER_DETAIL,QUERY
     }
-    public CrudDAO getDao(DAOType orderType){
+    public SuperDAO getDao(DAOType orderType){
         switch (orderType){
             case CUSTOMER:
                 return  new CustomerDAOImpl();
@@ -27,6 +24,8 @@ public class DAOFactory {
                 return new OrderDAOImpl();
             case ORDER_DETAIL:
                 return new OrderDetailDAOImpl();
+            case QUERY:
+                return new QueryDAOImpl();
             default:
                 return null;
         }
