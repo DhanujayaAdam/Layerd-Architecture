@@ -36,7 +36,8 @@ public class CustomerBOImpl implements CustomerBO {
     public String generateCustomerId() throws SQLException, ClassNotFoundException {
         return customerDAO.generateId();
     }
-    public Customer findCustomer(String newValue) throws SQLException, ClassNotFoundException {
-        return customerDAO.find(newValue);
+    public CustomerDTO findCustomer(String newValue) throws SQLException, ClassNotFoundException {
+        Customer customer = customerDAO.find(newValue);
+        return new CustomerDTO(customer.getId(),customer.getName(),customer.getAddress());
     }
 }
