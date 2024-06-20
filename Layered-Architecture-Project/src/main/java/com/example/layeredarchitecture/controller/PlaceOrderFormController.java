@@ -1,9 +1,9 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.bo.CustomerBO;
-import com.example.layeredarchitecture.bo.ItemBO;
-import com.example.layeredarchitecture.bo.OrderBO;
-import com.example.layeredarchitecture.bo.OrderDetailBO;
+import com.example.layeredarchitecture.bo.custom.impl.CustomerBO;
+import com.example.layeredarchitecture.bo.custom.impl.ItemBO;
+import com.example.layeredarchitecture.bo.custom.impl.OrderBO;
+import com.example.layeredarchitecture.bo.custom.impl.OrderDetailBO;
 import com.example.layeredarchitecture.bo.CustomerBOImpl;
 import com.example.layeredarchitecture.bo.ItemBOImpl;
 import com.example.layeredarchitecture.bo.OrderBOImpl;
