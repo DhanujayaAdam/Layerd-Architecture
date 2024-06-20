@@ -1,6 +1,7 @@
 package com.example.layeredarchitecture.bo.custom.impl;
 
 import com.example.layeredarchitecture.bo.custom.PurchaseOrderBO;
+import com.example.layeredarchitecture.dao.DAOFactory;
 import com.example.layeredarchitecture.dao.custom.CustomerDAO;
 import com.example.layeredarchitecture.dao.custom.ItemDAO;
 import com.example.layeredarchitecture.dao.custom.OrderDAO;
@@ -23,10 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
-    CustomerDAO customerDAO = new CustomerDAOImpl();
-    ItemDAO itemDAO = new ItemDAOImpl();
-    OrderDAO orderDAO = new OrderDAOImpl();
-    OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getObject().getDao(DAOFactory.DAOType.CUSTOMER);
+    ItemDAO itemDAO = (ItemDAO) DAOFactory.getObject().getDao(DAOFactory.DAOType.ITEM);
+    OrderDAO orderDAO = (OrderDAO) DAOFactory.getObject().getDao(DAOFactory.DAOType.ORDER);
+    OrderDetailDAO orderDetailDAO = (OrderDetailDAO) DAOFactory.getObject().getDao(DAOFactory.DAOType.ORDER_DETAIL);
     @Override
     public boolean existItem(String code) throws SQLException, ClassNotFoundException {
         return itemDAO.exist(code);
