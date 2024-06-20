@@ -1,13 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.bo.custom.impl.CustomerBO;
-import com.example.layeredarchitecture.bo.custom.impl.ItemBO;
-import com.example.layeredarchitecture.bo.custom.impl.OrderBO;
-import com.example.layeredarchitecture.bo.custom.impl.OrderDetailBO;
-import com.example.layeredarchitecture.bo.CustomerBOImpl;
-import com.example.layeredarchitecture.bo.ItemBOImpl;
-import com.example.layeredarchitecture.bo.OrderBOImpl;
-import com.example.layeredarchitecture.bo.OrderDetailBOImpl;
+import com.example.layeredarchitecture.bo.custom.*;
+import com.example.layeredarchitecture.bo.custom.impl.*;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
@@ -58,10 +52,7 @@ public class PlaceOrderFormController {
     public Label lblDate;
     public Label lblTotal;
     private String orderId;
-    CustomerBO customerBO = new CustomerBOImpl();
-    ItemBO itemBO = new ItemBOImpl();
-    OrderBO orderBO = new OrderBOImpl();
-    OrderDetailBO orderDetailBO = new OrderDetailBOImpl();
+    PurchaseOrderBO purchaseOrderBO = new PurchaseOrderBOImpl();
 
 
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -114,7 +105,7 @@ public class PlaceOrderFormController {
 //                            "There is no such customer associated with the id " + id
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
-                        CustomerDTO customer = customerBO.findCustomer(newValue);
+                        CustomerDTO customer = purchaseOrderBO.searchCustomer(newValue);
                         txtCustomerName.setText(customer.getName());
                     } catch (SQLException e) {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
@@ -140,7 +131,7 @@ public class PlaceOrderFormController {
                     if (!existItem(newItemCode + "")) {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
-                    ItemDTO item = itemBO.findItem(newItemCode);
+                    ItemDTO item = purchaseOrderBO.findItem(newItemCode);
                     txtDescription.setText(item.getDescription());
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
 
@@ -184,16 +175,16 @@ public class PlaceOrderFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-        return itemBO.existItem(code);
+        return purchaseOrderBO.existItem(code);
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerBO.existCustomer(id);
+        return purchaseOrderBO.existCustomer(id);
     }
 
     public String generateNewOrderId() {
         try {
-            return orderBO.generateOrderId();
+            return purchaseOrderBO.generateNewOrderId();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
         } catch (ClassNotFoundException e) {
@@ -204,7 +195,7 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            ArrayList<CustomerDTO> customerDTOS = customerBO.getAllCustomer();
+            ArrayList<CustomerDTO> customerDTOS = purchaseOrderBO.loadAllCustomerIds();
             for (CustomerDTO customer : customerDTOS) {
                 cmbCustomerId.getItems().add(customer.getId());
             }
@@ -219,7 +210,7 @@ public class PlaceOrderFormController {
     private void loadAllItemCodes() {
         try {
             /*Get all items*/
-            ArrayList<ItemDTO> items = itemBO.getAllItem();
+            ArrayList<ItemDTO> items = purchaseOrderBO.loadAllItemCodes();
             for (ItemDTO item : items) {
                 cmbItemCode.getItems().add(item.getCode());
             }
@@ -296,7 +287,7 @@ public class PlaceOrderFormController {
     public void txtQty_OnAction(ActionEvent actionEvent) {
     }
 
-    public void btnPlaceOrder_OnAction(ActionEvent actionEvent) {
+    public void btnPlaceOrder_OnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         boolean b = saveOrder(orderId, LocalDate.now(), cmbCustomerId.getValue(),
                 tblOrderDetails.getItems().stream().map(tm -> new OrderDetailDTO(orderId,tm.getCode(), tm.getQty(), tm.getUnitPrice())).collect(Collectors.toList()));
 
@@ -315,63 +306,13 @@ public class PlaceOrderFormController {
         calculateTotal();
     }
 
-    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
         /*Transaction*/
-        Connection connection = null;
-        try {
-            connection = DBConnection.getDbConnection().getConnection();
-            connection.setAutoCommit(false);
-            System.out.println("come to try catch");
-            System.out.println(orderId);
-            boolean idFound = orderBO.findOrderId(orderId);
-            System.out.println(idFound);
-            /*if order id already exist*/
-            if (idFound) {
-                System.out.println("isFound?");
-            }
-            System.out.println(orderId+","+orderDate+","+customerId);
-            boolean saveOrder = orderBO.addOrder(new OrderDTO(orderId,orderDate,customerId));
-            if (!saveOrder) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                return false;
-            }
-            for (OrderDetailDTO detail : orderDetails) {
-                boolean saveDetail = orderDetailBO.addOrderDetail(detail);
-                if (!saveDetail) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
-                    System.out.println("isSaveDetail");
-
-//                //Search & Update Item
-                        ItemDTO item = findItem(detail.getItemCode());
-                        item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
-                        boolean update = itemBO.updateItemAfterPlaceOrder(item);
-                        if (!update){
-                            connection.rollback();
-                            connection.setAutoCommit(true);
-                            return false;
-                        }
-                    }
-                    connection.commit();
-                    connection.setAutoCommit(true);
-                    return true;
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+        return purchaseOrderBO.saveOrder(orderId,orderDate,customerId,orderDetails);
     }
-
-
     public ItemDTO findItem(String code) {
         try {
-            ItemDTO item = itemBO.findItem(code);
+            ItemDTO item = purchaseOrderBO.findItem(code);
             return new ItemDTO(code, item.getDescription(), item.getQtyOnHand(), item.getUnitPrice());
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find the Item " + code, e);
